@@ -6,7 +6,7 @@ namespace MCSim {
 template <typename T> using VectorUniquePtr = std::unique_ptr<std::vector<T>>;
 
 struct SimulationResult {
-  VectorUniquePtr<double> final_wealths;
+  VectorUniquePtr<double> finalWealths;
   VectorUniquePtr<VectorUniquePtr<double>> paths;
 };
 
@@ -15,9 +15,8 @@ public:
   Simulator() = default;
   ~Simulator() = default;
 
-  [[nodiscard]] SimulationResult run(const Eigen::VectorXd &means,
-                                     const Eigen::MatrixXd &covariance,
-                                     double startingWealth, int years,
-                                     int paths) const;
+  [[nodiscard]] std::unique_ptr<SimulationResult>
+  run(const Eigen::VectorXd &means, const Eigen::MatrixXd &covariance,
+      double startingWealth, int years, int paths) const;
 };
 } // namespace MCSim
