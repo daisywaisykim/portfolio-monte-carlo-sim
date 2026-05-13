@@ -1,5 +1,6 @@
 #include "simulator.hpp"
 #include <Eigen/Dense>
+#include <memory>
 #include <random>
 #include <utility>
 
@@ -18,11 +19,11 @@ Simulator::run(const Eigen::VectorXd &means, const Eigen::MatrixXd &covariance,
   std::mt19937_64 gen(1337); // Seed for reproducibility
   std::normal_distribution<double> dist(0.0, 1.0);
 
-  auto finalWealthsAndPaths =
-      VectorUniquePtr<std::pair<double, VectorUniquePtr<double>>>();
+  auto finalWealthsAndPaths = std::make_unique<
+      std::vector<std::pair<double, VectorUniquePtr<double>>>>();
 
   for (int p = 0; p < paths; p++) {
-    VectorUniquePtr<double> path;
+    VectorUniquePtr<double> path = std::make_unique<std::vector<double>>();
 
     path->push_back(startingWealth);
     double wealth = startingWealth;
@@ -50,7 +51,10 @@ Simulator::run(const Eigen::VectorXd &means, const Eigen::MatrixXd &covariance,
   std::sort(finalWealthsAndPaths->begin(), finalWealthsAndPaths->end(),
             [](const auto &a, const auto &b) { return a.first < b.first; });
 
-  auto result = std::make_unique<SimulationResult>();
+  auto result = std::make_unique<SimulationResult>(
+      std::make_unique<std::vector<double>>(),
+      std::make_unique<std::vector<std::unique_ptr<std::vector<double>>>>());
+
   for (auto i = finalWealthsAndPaths->begin(); i < finalWealthsAndPaths->end();
        i++) {
     result->finalWealths->push_back(i->first);
