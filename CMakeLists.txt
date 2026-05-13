@@ -16,7 +16,7 @@ find_package(Eigen3 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
 # Define the executable
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/core/simulator.cpp)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen fmt::fmt)
